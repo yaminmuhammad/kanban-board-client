@@ -2,7 +2,7 @@ import React from "react";
 import socketIO from "socket.io-client";
 import AddTask from "./AddTask";
 import Nav from "./Nav";
-import TaskContainer from "./TaskContainer";
+import TasksContainer from "./TasksContainers";
 
 // Pass socket.io into the required components where
 // communications are made with the server
@@ -13,7 +13,7 @@ const Task = () => {
     <div>
       <Nav />
       <AddTask socket={socket} />
-      <TaskContainer socket={socket} />
+      <TasksContainer socket={socket} />
     </div>
   );
 };
