@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { socket } from "socket.io-client";
 
 const TasksContainer = () => {
   const [tasks, setTasks] = useState({});
@@ -16,6 +18,20 @@ const TasksContainer = () => {
     fetchTasks();
   }, []);
 
+  const handleDragEnd = ({ destination, source }) => {
+    if (!destination) return;
+    if (
+      destination.index === source.index &&
+      destination.droppableId === source.droppableId
+    )
+      return;
+
+    socket.emit("taskDragged", {
+      source,
+      destination,
+    });
+  };
+
   return (
     <div className="container">
       {/*
@@ -23,29 +39,50 @@ const TasksContainer = () => {
 
       {Object.entries(tasks).map((task) => console.log(task))}
       */}
-      {Object.entries(tasks).map((task) => {
-        <div
-          className={`${task[1].title.toLowercase()}__wrapper`}
-          key={task[1].title}
-        >
-          <h3>{task[1].title} Tasks</h3>
-          <div className={`${task[1].title.toLowerCase()}__container`}>
-            {task[1].items.map((item, index) => (
-              <div
-                className={`${task[1].title.toLowerCase()}__items`}
-                key={item.id}
-              >
-                <p>{item.title}</p>
-                <p className="comment">
-                  <Link to="/comments">
-                    {item.comments.length > 0 ? `View Comments` : "Add Comment"}
-                  </Link>
-                </p>
-              </div>
-            ))}
+      {/* DragDrop Context */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        {Object.entries(tasks).map((task) => (
+          <div
+            className={`${task[1].title.toLowerCase()}__wrapper`}
+            key={task[1].title}
+          >
+            {/* Droppable  */}
+            <Droppable droppableId={task[1].title}>
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {task[1].items.map((item, index) => (
+                    // Dragable
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`${task[1].title.toLowerCase()}__items`}
+                        >
+                          <p>{item.title}</p>
+                          <p className="comment">
+                            <Link to={`/comments/${task[1].title}/${item.id}`}>
+                              {item.comments.length > 0
+                                ? `View Comments`
+                                : "Add Comment"}
+                            </Link>
+                          </p>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </div>
-        </div>;
-      })}
+        ))}
+      </DragDropContext>
     </div>
   );
 };
