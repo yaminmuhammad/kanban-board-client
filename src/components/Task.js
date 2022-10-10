@@ -1,11 +1,9 @@
 import React from "react";
-import socketIO from "socket.io-client";
 import AddTask from "./AddTask";
+import TasksContainer from "./TasksContainer";
 import Nav from "./Nav";
-import TasksContainer from "./TasksContainers";
+import socketIO from "socket.io-client";
 
-// Pass socket.io into the required components where
-// communications are made with the server
 const socket = socketIO.connect("http://localhost:4000");
 
 const Task = () => {

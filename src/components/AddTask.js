@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 
-const AddTask = () => {
+const AddTask = ({ socket }) => {
   const [task, setTask] = useState("");
 
   const handleAddTodo = (e) => {
     e.preventDefault();
-    // Logs the task to the console
-    console.log({ task });
+    // sends the task to the socket.io server
+    socket.emit("createTask", { task });
     setTask("");
   };
   return (
     <form className="form__input" onSubmit={handleAddTodo}>
-      <label htmlFor="task"> Add Todo </label>
+      <label htmlFor="task">Add Todo</label>
       <input
         type="text"
         name="task"
@@ -21,7 +21,7 @@ const AddTask = () => {
         required
         onChange={(e) => setTask(e.target.value)}
       />
-      <button className="addTodoBtn"> ADD TODO </button>
+      <button className="addTodoBtn">ADD TODO</button>
     </form>
   );
 };

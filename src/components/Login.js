@@ -7,18 +7,16 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // save the username to local storage
     localStorage.setItem("userId", username);
     setUsername("");
-    // redirect to the task page
-    navigate("/tasks");
+    navigate("/task");
   };
   return (
     <div className="login__container">
       <form className="login__form" onSubmit={handleLogin}>
         <label htmlFor="username">Provide a username</label>
         <input
-          type={"text"}
+          type="text"
           name="username"
           id="username"
           required

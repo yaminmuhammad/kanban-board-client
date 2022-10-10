@@ -7,11 +7,13 @@ import Comments from "./components/Comments";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/task" element={<Task />} />
-        <Route path="/comments/:category/:id" element={<Comments />} />
-      </Routes>
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/task" element={<Task />} />
+          <Route path="/comments/:category/:id" element={<Comments />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }
